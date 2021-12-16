@@ -1,9 +1,5 @@
-using Microsoft.VisualBasic.ApplicationServices;
-
-using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Windows.Forms;
 
 namespace WinFormsApp2
 {
@@ -12,10 +8,8 @@ namespace WinFormsApp2
         private SqlConnection sqlConnection;
         private List<string> columns;
         private List<Type> typeColumns;
-        public InterfaceDB()
-        {
+        public InterfaceDB() =>
             InitializeComponent();
-        }
 
         private async void Form1_Load(object sender, EventArgs e)
 {
@@ -70,8 +64,7 @@ namespace WinFormsApp2
         }
         private async Task LoadTableAsync()
         {
-            SqlDataReader sqlDataReader = null;
-
+            SqlDataReader? sqlDataReader = null;
             SqlCommand getTableComand = new("SELECT * FROM [Person]", sqlConnection);
 
             try
@@ -127,10 +120,10 @@ namespace WinFormsApp2
                 DialogResult result = MessageBox.Show("Are you sure you want to delete this row from the database.\nThis is an irreparable action!", "Deleting a line", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (result == DialogResult.Yes)
                 {
-                    SqlCommand deleteComand = new SqlCommand("DELETE FROM [Person] WHERE [Id]=@Id", sqlConnection);
-                    deleteComand.Parameters.AddWithValue("Id", Convert.ToInt32(listView1.SelectedItems[0].SubItems[0].Text));
+                    SqlCommand deleteComand = new SqlCommand("DELETE FROM [Person] WHERE [" + columns[0] + "]=@Id", sqlConnection);
                     try
                     {
+                        deleteComand.Parameters.AddWithValue(columns[0], Convert.ToInt32(listView1.SelectedItems[0].SubItems[0].Text));
                         await deleteComand.ExecuteNonQueryAsync();
                     }
                     catch (Exception ex)

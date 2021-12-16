@@ -55,13 +55,12 @@ namespace WinFormsApp2
             List<string> newColumns = new List<string>(columns);
             newColumns.RemoveAt(0);
 
-            SqlCommand getInfoComand = new SqlCommand("SELECT [" + String.Join("], [", newColumns) + "] FROM [Person] WHERE [Id]=@Id", sqlConnection);
-            getInfoComand.Parameters.AddWithValue("Id", id);
-
             SqlDataReader? reader = null;
+            SqlCommand getInfoComand = new SqlCommand("SELECT [" + String.Join("], [", newColumns) + "] FROM [Person] WHERE [" + columns[0] + "]=@Id", sqlConnection);
 
             try
             {
+                getInfoComand.Parameters.AddWithValue(columns[0], Convert.ToInt32(id));
                 reader = await getInfoComand.ExecuteReaderAsync();
                 if (await reader.ReadAsync())
                     for (int i = 0; i < newColumns.Count; i++)
@@ -94,11 +93,11 @@ namespace WinFormsApp2
             foreach (var column in newColumns)
                 setArray.Add("[" + column + "]=@" + column);
             
-            SqlCommand updateComand = new SqlCommand("UPDATE [Person] SET " + String.Join(", ", setArray) + " WHERE [Id]=@Id", sqlConnection);
+            SqlCommand updateComand = new SqlCommand("UPDATE [Person] SET " + String.Join(", ", setArray) + " WHERE [" + columns[0] + "]=@Id", sqlConnection);
 
             try
             {
-                updateComand.Parameters.AddWithValue("Id", Convert.ToInt32(id));
+                updateComand.Parameters.AddWithValue(columns[0], Convert.ToInt32(id));
                 for (int i = 0; i < newColumns.Count; i++)
                     updateComand.Parameters.AddWithValue(newColumns[i], Convert.ChangeType(textBox[i].Text, newTypeColumns[i]));
                 await updateComand.ExecuteNonQueryAsync();

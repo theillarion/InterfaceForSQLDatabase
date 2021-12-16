@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Data;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
 namespace WinFormsApp2
 {
@@ -48,12 +38,6 @@ namespace WinFormsApp2
                 }
             }
         }
-
-        private void Insert_Load(object sender, EventArgs e)
-        {
-            
-        }
-
         private async void toolStripButtonSave_Click(object sender, EventArgs e)
         {
             List<string> newColumns = new List<string>(columns);
@@ -80,9 +64,9 @@ namespace WinFormsApp2
             }
         }
 
-        private void toolStripButtonCancel_Click(object sender, EventArgs e)
-        {
+        private void toolStripButtonCancel_Click(object sender, EventArgs e) =>
             Close();
-        }
+
+        private void Insert_Load(object sender, EventArgs e) { }
     }
 }
