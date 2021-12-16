@@ -8,14 +8,14 @@ namespace WinFormsApp2
         private SqlConnection sqlConnection;
         private List<string> columns;
         private List<Type> typeColumns;
-        public InterfaceDB() =>
+        public InterfaceDB(SqlConnection sqlConnection)
+        {
             InitializeComponent();
-
-        private async void Form1_Load(object sender, EventArgs e)
-{
-            sqlConnection = new SqlConnection("Data Source = (LocalDB)\\MSSQLLocalDB; AttachDbFilename = C:\\Users\\pro10\\source\\repos\\WinFormsApp2\\WinFormsApp2\\TestBD.mdf; Integrated Security = True");
-            await sqlConnection.OpenAsync();
+            this.sqlConnection = sqlConnection;
+        }
             
+        private async void Form1_Load(object sender, EventArgs e)
+{           
             listView1.GridLines = true;
             listView1.FullRowSelect = true;
             listView1.View = View.Details;

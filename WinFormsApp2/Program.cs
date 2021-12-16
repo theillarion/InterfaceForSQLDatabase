@@ -9,7 +9,7 @@ namespace WinFormsApp2
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            Application.Run(new InterfaceDB());
+            Application.Run(new Connection());
         }
     }
 }
