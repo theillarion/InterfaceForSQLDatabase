@@ -8,23 +8,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace WinFormsApp2
 {
     public partial class Update : Form
     {
         private SqlConnection sqlConnection;
-        private int id;
+        private string id;
         private List<string> columns;
         private List<Type> typeColumns;
         private TextBox[] textBox;
-        public Update(SqlConnection sqlConnection, int id, List<string> columns, List<Type> typeColumns)
+        private string nameTable;
+        public Update(SqlConnection sqlConnection, string id, List<string> columns, List<Type> typeColumns, string nameTable)
         {
             InitializeComponent();
             this.sqlConnection = sqlConnection;
             this.id = id;
             this.columns = columns;
             this.typeColumns = typeColumns;
+            this.nameTable = nameTable;
 
             int value = 20;
             int i = 0;
@@ -32,7 +35,7 @@ namespace WinFormsApp2
             textBox = new TextBox[columns.Count - 1];
             foreach (var column in columns)
             {
-                if (column != "Id")
+                if (column != columns[0])
                 {
                     label[i] = new Label();
                     label[i].Location = new Point(20, value);
@@ -56,11 +59,14 @@ namespace WinFormsApp2
             newColumns.RemoveAt(0);
 
             SqlDataReader? reader = null;
-            SqlCommand getInfoComand = new SqlCommand("SELECT [" + String.Join("], [", newColumns) + "] FROM [Person] WHERE [" + columns[0] + "]=@Id", sqlConnection);
+            SqlCommand getInfoComand = new SqlCommand("SELECT [" + String.Join("], [", newColumns) + "] FROM [" + nameTable + "] WHERE [" + columns[0] + "]=@Id", sqlConnection);
 
             try
             {
-                getInfoComand.Parameters.AddWithValue(columns[0], Convert.ToInt32(id));
+                if (typeColumns[0].Name == "Guid")
+                    getInfoComand.Parameters.AddWithValue(columns[0], Guid.Parse(id));
+                else
+                    getInfoComand.Parameters.AddWithValue(columns[0], Convert.ChangeType(id, typeColumns[0]));
                 reader = await getInfoComand.ExecuteReaderAsync();
                 if (await reader.ReadAsync())
                     for (int i = 0; i < newColumns.Count; i++)
@@ -93,11 +99,14 @@ namespace WinFormsApp2
             foreach (var column in newColumns)
                 setArray.Add("[" + column + "]=@" + column);
             
-            SqlCommand updateComand = new SqlCommand("UPDATE [Person] SET " + String.Join(", ", setArray) + " WHERE [" + columns[0] + "]=@Id", sqlConnection);
+            SqlCommand updateComand = new SqlCommand("UPDATE [" + nameTable + "] SET " + String.Join(", ", setArray) + " WHERE [" + columns[0] + "]=@Id", sqlConnection);
 
             try
             {
-                updateComand.Parameters.AddWithValue(columns[0], Convert.ToInt32(id));
+                if (typeColumns[0].Name == "Guid")
+                    updateComand.Parameters.AddWithValue(columns[0], Guid.Parse(id));
+                else
+                    updateComand.Parameters.AddWithValue(columns[0], Convert.ChangeType(id, typeColumns[0]));
                 for (int i = 0; i < newColumns.Count; i++)
                     updateComand.Parameters.AddWithValue(newColumns[i], Convert.ChangeType(textBox[i].Text, newTypeColumns[i]));
                 await updateComand.ExecuteNonQueryAsync();

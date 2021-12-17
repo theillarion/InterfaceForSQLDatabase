@@ -8,10 +8,12 @@ namespace WinFormsApp2
         private SqlConnection sqlConnection;
         private List<string> columns;
         private List<Type> typeColumns;
-        public InterfaceDB(SqlConnection sqlConnection)
+        private string nameTable;
+        public InterfaceDB(SqlConnection sqlConnection, string nameTable)
         {
             InitializeComponent();
             this.sqlConnection = sqlConnection;
+            this.nameTable = nameTable;
         }
             
         private async void Form1_Load(object sender, EventArgs e)
@@ -33,7 +35,7 @@ namespace WinFormsApp2
         private async Task LoadColumnTableAsync()
         {
             SqlDataReader sqlDataReader = null;  // "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Person'"
-            SqlCommand getColumnComand = new("SELECT * FROM [Person]", sqlConnection);
+            SqlCommand getColumnComand = new("SELECT * FROM [" + nameTable + "]", sqlConnection);
             columns = new List<string>();
             typeColumns = new List<Type>();
             try
@@ -65,7 +67,7 @@ namespace WinFormsApp2
         private async Task LoadTableAsync()
         {
             SqlDataReader? sqlDataReader = null;
-            SqlCommand getTableComand = new("SELECT * FROM [Person]", sqlConnection);
+            SqlCommand getTableComand = new("SELECT * FROM [" + nameTable + "]", sqlConnection);
 
             try
             {
@@ -98,7 +100,7 @@ namespace WinFormsApp2
 
         private void toolStripButtonInsert_Click(object sender, EventArgs e)
         {
-            Insert insert = new(sqlConnection, columns, typeColumns);
+            Insert insert = new(sqlConnection, columns, typeColumns, nameTable);
             insert.Show();
         }
 
@@ -106,7 +108,7 @@ namespace WinFormsApp2
         {
             if (listView1.SelectedItems.Count > 0)
             {
-                Update update = new(sqlConnection, Convert.ToInt32(listView1.SelectedItems[0].SubItems[0].Text), columns, typeColumns);
+                Update update = new(sqlConnection, listView1.SelectedItems[0].SubItems[0].Text, columns, typeColumns, nameTable);
                 update.Show();
             }
             else
@@ -120,10 +122,10 @@ namespace WinFormsApp2
                 DialogResult result = MessageBox.Show("Are you sure you want to delete this row from the database.\nThis is an irreparable action!", "Deleting a line", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (result == DialogResult.Yes)
                 {
-                    SqlCommand deleteComand = new SqlCommand("DELETE FROM [Person] WHERE [" + columns[0] + "]=@Id", sqlConnection);
+                    SqlCommand deleteComand = new SqlCommand("DELETE FROM [" + nameTable + "] WHERE [" + columns[0] + "]=@Id", sqlConnection);
                     try
                     {
-                        deleteComand.Parameters.AddWithValue(columns[0], Convert.ToInt32(listView1.SelectedItems[0].SubItems[0].Text));
+                        deleteComand.Parameters.AddWithValue(columns[0], listView1.SelectedItems[0].SubItems[0].Text);
                         await deleteComand.ExecuteNonQueryAsync();
                     }
                     catch (Exception ex)

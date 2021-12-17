@@ -8,12 +8,14 @@ namespace WinFormsApp2
         private List<string> columns;
         private List<Type> typeColumns;
         private TextBox[] textBox;
-        public Insert(SqlConnection sqlConnection, List<string> columns, List<Type> typeColumns)
+        private string nameTable;
+        public Insert(SqlConnection sqlConnection, List<string> columns, List<Type> typeColumns, string nameTable)
         {
             InitializeComponent();
             this.sqlConnection = sqlConnection;
             this.columns = columns;
             this.typeColumns = typeColumns;
+            this.nameTable = nameTable;
 
             int value = 20;
             int i = 0;
@@ -45,7 +47,7 @@ namespace WinFormsApp2
             newColumns.RemoveAt(0);
             newTypeColumns.RemoveAt(0);
             
-            SqlCommand insertComand = new SqlCommand("INSERT INTO [Person] (" + String.Join(", ", newColumns) + ")VALUES(@" + String.Join(", @", newColumns) + ")", sqlConnection);
+            SqlCommand insertComand = new SqlCommand("INSERT INTO [" + nameTable + "] (" + String.Join(", ", newColumns) + ")VALUES(@" + String.Join(", @", newColumns) + ")", sqlConnection);
             
             try
             {
