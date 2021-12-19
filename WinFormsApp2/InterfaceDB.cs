@@ -42,17 +42,14 @@ namespace WinFormsApp2
             {
                 sqlDataReader = await getColumnComand.ExecuteReaderAsync();
                 
-                if (sqlDataReader.HasRows)
+                for (int i = 0; i < sqlDataReader.FieldCount; i++)
                 {
-                    for (int i = 0; i < sqlDataReader.FieldCount; i++)
-                    {
-                        columns.Add(sqlDataReader.GetName(i));
-                        typeColumns.Add(sqlDataReader.GetFieldType(i));
-                    }
+                    columns.Add(sqlDataReader.GetName(i));
+                    typeColumns.Add(sqlDataReader.GetFieldType(i));
+                }
                         
-                    foreach (var column in columns)
-                        listView1.Columns.Add(column);
-                }       
+                foreach (var column in columns)
+                    listView1.Columns.Add(column);
             }
             catch (Exception ex)
             {
