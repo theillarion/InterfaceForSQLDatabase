@@ -92,12 +92,25 @@ namespace WinFormsApp2
         {
             var newColumns = new List<string>(columns);
             var newTypeColumns = new List<Type>(typeColumns);
+            var newTextBox = new List<TextBox>(textBox);
             newColumns.RemoveAt(0);
             newTypeColumns.RemoveAt(0);
 
             var setArray = new List<string>();
-            foreach (var column in newColumns)
-                setArray.Add("[" + column + "]=@" + column);
+            for (int i = 0; i < newColumns.Count; i++)
+                if (textBox[i].Text != "")
+                    setArray.Add("[" + newColumns[i] + "]=@" + newColumns[i]);
+
+            for (int i = 0; i < newColumns.Count; i++)
+            {
+                if (newTextBox[i].Text == "")
+                {
+                    newColumns.RemoveAt(i);
+                    newTypeColumns.RemoveAt(i);
+                    newTextBox.RemoveAt(i);
+                    i--;
+                }
+            }
             
             SqlCommand updateComand = new SqlCommand("UPDATE [" + nameTable + "] SET " + String.Join(", ", setArray) + " WHERE [" + columns[0] + "]=@Id", sqlConnection);
 
@@ -108,7 +121,7 @@ namespace WinFormsApp2
                 else
                     updateComand.Parameters.AddWithValue(columns[0], Convert.ChangeType(id, typeColumns[0]));
                 for (int i = 0; i < newColumns.Count; i++)
-                    updateComand.Parameters.AddWithValue(newColumns[i], Convert.ChangeType(textBox[i].Text, newTypeColumns[i]));
+                    updateComand.Parameters.AddWithValue(newColumns[i], Convert.ChangeType(newTextBox[i].Text, newTypeColumns[i]));
                 await updateComand.ExecuteNonQueryAsync();
                 Close();
             }

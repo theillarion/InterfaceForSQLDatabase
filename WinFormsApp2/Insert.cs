@@ -44,18 +44,26 @@ namespace WinFormsApp2
         {
             List<string> newColumns = new List<string>(columns);
             List<Type> newTypeColumns = new List<Type>(typeColumns);
+            List<TextBox> newTextBox = new List<TextBox>(textBox);
             newColumns.RemoveAt(0);
             newTypeColumns.RemoveAt(0);
-            
+            for (int i = 0; i < newColumns.Count; i++)
+            {
+                if (newTextBox[i].Text == "")
+                {
+                    newColumns.RemoveAt(i);
+                    newTypeColumns.RemoveAt(i);
+                    newTextBox.RemoveAt(i);
+                    i--;
+                }
+            }
+                
             SqlCommand insertComand = new SqlCommand("INSERT INTO [" + nameTable + "] (" + String.Join(", ", newColumns) + ")VALUES(@" + String.Join(", @", newColumns) + ")", sqlConnection);
             
             try
             {
                 for (int i = 0; i < newColumns.Count; i++)
-                {
-                    if (textBox[i].Text != "")
-                        insertComand.Parameters.AddWithValue(newColumns[i], Convert.ChangeType(textBox[i].Text, newTypeColumns[i]));
-                }
+                        insertComand.Parameters.AddWithValue(newColumns[i], Convert.ChangeType(newTextBox[i].Text, newTypeColumns[i]));
                     
                 await insertComand.ExecuteNonQueryAsync();
                 Close();
@@ -68,7 +76,5 @@ namespace WinFormsApp2
 
         private void toolStripButtonCancel_Click(object sender, EventArgs e) =>
             Close();
-
-        private void Insert_Load(object sender, EventArgs e) { }
     }
 }
