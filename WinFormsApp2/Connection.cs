@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WinFormsApp2
+namespace InterfaceBDSQL
 {
     public partial class Connection : Form
     {

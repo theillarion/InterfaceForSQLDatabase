@@ -1,4 +1,4 @@
-namespace WinFormsApp2
+namespace InterfaceBDSQL
 {
     internal static class Program
     {

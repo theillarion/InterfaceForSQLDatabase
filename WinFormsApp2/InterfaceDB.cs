@@ -1,7 +1,7 @@
 using System.Data;
 using System.Data.SqlClient;
 
-namespace WinFormsApp2
+namespace InterfaceBDSQL
 {
     public partial class InterfaceDB : Form
     {
