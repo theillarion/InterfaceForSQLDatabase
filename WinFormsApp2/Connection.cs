@@ -15,6 +15,7 @@ namespace WinFormsApp2
     {
         private SqlConnection sqlConnection;
         private List<string> nameTables;
+        //private InterfaceDB interfaceDB;
         public Connection()
         {
             InitializeComponent();
@@ -79,5 +80,17 @@ namespace WinFormsApp2
                 MessageBox.Show("The table is ont selected or is not present on the server", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void Connection_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (sqlConnection != null && sqlConnection.State != ConnectionState.Closed)
+                sqlConnection.Close();
+        }
+
+        private void toolStripMenuItemExit_Click(object sender, EventArgs e) =>
+            Application.Exit();
+
+        private void toolStripMenuItemAbout_Click(object sender, EventArgs e) =>
+            MessageBox.Show("Interface for working rith SQL database.\nMade by Abdullova Aigul for the university\n2021", "About the program", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 }

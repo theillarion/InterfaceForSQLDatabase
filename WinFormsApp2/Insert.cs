@@ -17,7 +17,7 @@ namespace WinFormsApp2
             this.typeColumns = typeColumns;
             this.nameTable = nameTable;
 
-            int value = 20;
+            int value = 30;
             int i = 0;
             Label[] label = new Label[columns.Count - 1];
             textBox = new TextBox[columns.Count - 1];
@@ -76,5 +76,11 @@ namespace WinFormsApp2
 
         private void toolStripButtonCancel_Click(object sender, EventArgs e) =>
             Close();
+
+        private void toolStripMenuItemExit_Click(object sender, EventArgs e) =>
+            Application.Exit();
+
+        private void toolStripMenuItemAbout_Click(object sender, EventArgs e) =>
+            MessageBox.Show("Interface for working rith SQL database.\nMade by Abdullova Aigul for the university\n2021", "About the program", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 }

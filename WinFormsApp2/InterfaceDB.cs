@@ -14,8 +14,7 @@ namespace WinFormsApp2
             InitializeComponent();
             this.sqlConnection = sqlConnection;
             this.nameTable = nameTable;
-        }
-            
+        }   
         private async void Form1_Load(object sender, EventArgs e)
 {           
             listView1.GridLines = true;
@@ -24,12 +23,6 @@ namespace WinFormsApp2
 
             await LoadColumnTableAsync();
             await LoadTableAsync();
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (sqlConnection != null && sqlConnection.State != ConnectionState.Closed)
-                sqlConnection.Close();
         }
 
         private async Task LoadColumnTableAsync()
@@ -149,6 +142,6 @@ namespace WinFormsApp2
             Application.Exit();
 
         private void toolStripMenuItemAbout_Click(object sender, EventArgs e) =>
-            MessageBox.Show("Interface for working rith SQL database.\n2021", "About the program", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Interface for working rith SQL database.\nMade by Abdullova Aigul for the university\n2021", "About the program", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 }
